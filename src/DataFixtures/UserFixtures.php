@@ -22,10 +22,15 @@ class UserFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
         $admin = new User();
+        $admin->setFirstname("John");
+        $admin->setLastname("Doe");
         $admin->setEmail('admin@gmail.com');
         $admin->setPassword($this->encoder->encodePassword($admin, 'admin'));
         $admin->setRoles(["ROLE_ADMIN"]);
         $manager->persist($admin);
+        $this->addReference("user-name", $admin);
+
+
 
         $manager->flush();
     }

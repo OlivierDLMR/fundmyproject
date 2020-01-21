@@ -7,7 +7,8 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ProjectFixtures extends Fixture
+
+class ProjectFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -19,6 +20,9 @@ class ProjectFixtures extends Fixture
         $goodGirl->setExcerpt("Ce film parle de ...");
         $goodGirl->setDescription("Ce film parle de trucs très sympa entre copines partant à l'avanture!!!!");
         $goodGirl->setGoal(20000.00);
+        $goodGirl->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
+        $goodGirl->addCategory($this->getReference("category-film"));
+        $goodGirl->addContribution($this->getReference("amount"));
         $manager->persist($goodGirl);
 
         $lesyeuxDansLeBus = new Project();
@@ -27,6 +31,9 @@ class ProjectFixtures extends Fixture
         $lesyeuxDansLeBus->setExcerpt("Revivez la grande épopée de l'équipe de France de football lors du mondial de football 2010.");
         $lesyeuxDansLeBus->setDescription("Revivez la grande épopée de l'équipe de France de football lors du mondial de football 2010. Un truc de dingue");
         $lesyeuxDansLeBus->setGoal(15952.25);
+        $lesyeuxDansLeBus->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
+        $lesyeuxDansLeBus->addCategory($this->getReference("category-film"));
+        $lesyeuxDansLeBus->addCategory($this->getReference("category-sport"));
         $manager->persist($lesyeuxDansLeBus);
 
         $dabado = new Project();
@@ -35,6 +42,8 @@ class ProjectFixtures extends Fixture
         $dabado->setExcerpt("Un jeu fantastique peint à la main. Plongez dans des aventures extra-ordinaires !");
         $dabado->setDescription("Un jeu fantastique peint à la main. Plongez dans des aventures extra-ordinaires ! et cultivez pleins de carottes");
         $dabado->setGoal(500000.01);
+        $dabado->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
+        $dabado->addCategory($this->getReference("category-jeux"));
         $manager->persist($dabado);
 
         $doosh = new Project();
@@ -43,9 +52,22 @@ class ProjectFixtures extends Fixture
         $doosh->setExcerpt("Venez m'accompagner dans mon projet de création musicale avec clip vidéo !");
         $doosh->setDescription("Venez m'accompagner dans mon projet de création musicale avec clip vidéo !, avec des pompes sur la face et d'autre trucs cool :)");
         $doosh->setGoal(1452359.21);
+        $doosh->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
+        $doosh->addCategory($this->getReference("category-musique"));
         $manager->persist($doosh);
 
         $manager->flush();
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getDependencies()
+    {
+        return[
+            CategoryFixtures::class,
+            UserFixtures::class,
+            ContributionFixtures::class
+        ];
     }
 
 }
