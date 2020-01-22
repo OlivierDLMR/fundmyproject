@@ -3,9 +3,9 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="col-4">
         <h1>{{ project.name }}</h1>
-        <img src="{{ asset('uploads/'~ project.image) }}" alt="{{ project.name }}">
+        <img src="{{ asset('uploads/'~ project.image) }}" class="card-img-top" alt="{{ project.name }}">
         <p>Catégories : </p>
         <ul>
             {% for category in project.categories %}
@@ -17,4 +17,20 @@
         <p>{{ project.description }}</p>
 
     </div>
+    <article class="col-4">
+        <div class="card">
+            <img src="uploads/project1.jpg" class="card-img-top" alt="Good Girl">
+            <div class="card-body">
+                <h5 class="card-title">Good Girl</h5>
+                <ul class="badges">
+                    <li><a href="category.html" class="badge badge-pill badge-primary">Film</a></li>
+                </ul>
+                <p class="card-text">Ce film parle de ...</p>
+                <a href="project.html" class="btn btn-primary">
+                    <i class="fa fa-eye"></i>
+                    Voir plus
+                </a>
+            </div>
+        </div>
+    </article>
 {% endblock %}

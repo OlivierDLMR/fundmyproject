@@ -9,12 +9,13 @@
         <section class="container">
             <h1>La liste de nos Catégories </h1>
         </section>
-        <section class="doctor">
-            <div class="container">
-                {% for category in categories %}
-                    {% include 'category/_thumbail.html.twig' with {'category': category} %}
-                {% endfor %}
+        <li class="nav-item dropdown">
+            a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">Catégories <span class="caret"></span></a>
+            <div class="dropdown-menu" aria-labelledby="download">
+                <a class="dropdown-item" href="{% for category in categories %}
+                   {% include 'category/_thumbail.html.twig' with {'category': category} %}
+                {% endfor %}"></a>
             </div>
-        </section>
+        </li>
     </div>
 {% endblock %}
