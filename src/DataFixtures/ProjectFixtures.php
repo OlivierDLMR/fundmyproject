@@ -23,6 +23,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         $goodGirl->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
         $goodGirl->addCategory($this->getReference("category-film"));
         $goodGirl->addContribution($this->getReference("amount"));
+        $goodGirl->setUser($this->getReference("Marie"));
         $manager->persist($goodGirl);
 
         $lesyeuxDansLeBus = new Project();
@@ -34,6 +35,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         $lesyeuxDansLeBus->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
         $lesyeuxDansLeBus->addCategory($this->getReference("category-film"));
         $lesyeuxDansLeBus->addCategory($this->getReference("category-sport"));
+        $lesyeuxDansLeBus->setUser($this->getReference("user-name"));
         $manager->persist($lesyeuxDansLeBus);
 
         $dabado = new Project();
@@ -44,6 +46,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         $dabado->setGoal(500000.01);
         $dabado->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
         $dabado->addCategory($this->getReference("category-jeux"));
+        $dabado->setUser($this->getReference("Marie"));
         $manager->persist($dabado);
 
         $doosh = new Project();
@@ -54,6 +57,7 @@ class ProjectFixtures extends Fixture implements DependentFixtureInterface
         $doosh->setGoal(1452359.21);
         $doosh->setCreatedAt(new\DateTime("2020-01-20 15:02:03"));
         $doosh->addCategory($this->getReference("category-musique"));
+        $doosh->setUser($this->getReference("Marie"));
         $manager->persist($doosh);
 
         $manager->flush();

@@ -91,4 +91,14 @@ class CategoryController extends AbstractController
 
         return $this->redirectToRoute('category_index');
     }
+
+    public function headerCategory()
+    {
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        return $this->render('category/_thumbail.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
+
 }

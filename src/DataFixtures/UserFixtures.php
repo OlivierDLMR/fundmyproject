@@ -30,6 +30,17 @@ class UserFixtures extends Fixture
         $manager->persist($admin);
         $this->addReference("user-name", $admin);
 
+        $marie = new User();
+        $marie->setFirstname("Marie");
+        $marie->setLastname("Peterson");
+        $marie->setEmail('mp@gmail.com');
+        $marie->setPassword($this->encoder->encodePassword($marie, 'marie'));
+        $marie->setRoles(["ROLE_USER"]);
+        $manager->persist($marie);
+        $this->addReference("Marie", $marie);
+
+
+
 
 
         $manager->flush();

@@ -214,4 +214,9 @@ class Project
 
         return $this;
     }
+    // Pour enrigistrer la date et l'heure quand les utilisateurs clique sir envoyer dans le formulaire
+    /**
+     * @ORM\PrePersit
+     */
+
 }
