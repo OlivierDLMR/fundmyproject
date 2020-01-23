@@ -216,7 +216,18 @@ class Project
     }
     // Pour enrigistrer la date et l'heure quand les utilisateurs clique sir envoyer dans le formulaire
     /**
-     * @ORM\PrePersit
+     * @ORM\PrePersist
      */
+
+    public function prePersist()
+    {
+        $this->setCreatedAt(new \DateTime());
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
 
 }

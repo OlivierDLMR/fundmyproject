@@ -229,8 +229,7 @@ class User implements UserInterface
 
     public function __toString()
     {
-        return $this->setEmail();
-        return $this->setPassword();
+        return $this->getUsername();
     }
 
 

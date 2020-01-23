@@ -7,14 +7,16 @@
         <h1>{{ category.name }}</h1>
         <a href="{{ path('category_show', {'id': category.id}) }}">{{ category.name }}</a>
 
-        <p>Catégories : </p>
+        <p>Catégories : {{ category.name }} </p>
         <ul>
             {% for category in category.name %}
                 <li>{{ category.name }}</li>
-            {% else %}
-                <li>Aucune catégorie</li>
             {% endfor %}
         </ul>
+        {% for project in category.projects %}
+
+            <img src="{{ asset('uploads/' ~ project.image) }}" alt="{{ project.name }}">
+        {% endfor %}
 
 
     </div>

@@ -18,7 +18,6 @@ class ProjectController extends AbstractController
 {
     /**
      * @Route("/", name="project_index", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
      */
     public function index(ProjectRepository $projectRepository): Response
     {

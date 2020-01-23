@@ -31,6 +31,19 @@
                 <th>Lastname</th>
                 <td>{{ user.lastname }}</td>
             </tr>
+            <tr>
+                <th>Projets créés</th>
+                <td>
+                    <ul>
+                        {% for project in user.projects %}
+                            <li>
+                                {{ project.name }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                </td>
+            </tr>
         </tbody>
     </table>
 
