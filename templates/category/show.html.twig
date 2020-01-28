@@ -7,7 +7,13 @@
         <h1>{{ category.name }}</h1>
         <a href="{{ path('category_show', {'id': category.id}) }}">{{ category.name }}</a>
 
-        <p>Catégories :Il y a {{ category.projects.count }} projets dans la catégorie {{ category.name }} </p>
+        {% if category.projects.count < 2 %}
+            il y à {{ category.projects.count }} projet dans la catégorie {{ category.name }}
+
+        {% else %}
+            <p>Catégories :Il y a {{ category.projects.count }} projets dans la catégorie {{ category.name }} </p>
+        {% endif %}
+
         <ul>
             {% for category in category.name %}
                 <li>{{ category.name }}</li>
