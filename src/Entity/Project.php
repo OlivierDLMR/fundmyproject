@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProjectRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Project
 {
@@ -39,24 +40,26 @@ class Project
     private $description;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     private $goal;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="projects")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Contribution", mappedBy="projet")
-     */
-    private $contributions;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="projects")
      */
     private $categories;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contribution", mappedBy="project", orphanRemoval=true)
+     * @ORM\OrderBy({"createdAt" = "DESC"})
+     */
+    private $contributions;
 
     /**
      * @ORM\Column(type="datetime")
@@ -65,8 +68,8 @@ class Project
 
     public function __construct()
     {
-        $this->contributions = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -89,6 +92,11 @@ class Project
     public function getImage(): ?string
     {
         return $this->image;
+    }
+
+    public function getImageOrPlaceholder(): string
+    {
+        return empty($this->getImage()) ? "images/placeholder.png" : "uploads/" . $this->getImage();
     }
 
     public function setImage(?string $image): self
@@ -147,37 +155,6 @@ class Project
     }
 
     /**
-     * @return Collection|Contribution[]
-     */
-    public function getContributions(): Collection
-    {
-        return $this->contributions;
-    }
-
-    public function addContribution(Contribution $contribution): self
-    {
-        if (!$this->contributions->contains($contribution)) {
-            $this->contributions[] = $contribution;
-            $contribution->setProjet($this);
-        }
-
-        return $this;
-    }
-
-    public function removeContribution(Contribution $contribution): self
-    {
-        if ($this->contributions->contains($contribution)) {
-            $this->contributions->removeElement($contribution);
-            // set the owning side to null (unless already changed)
-            if ($contribution->getProjet() === $this) {
-                $contribution->setProjet(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Category[]
      */
     public function getCategories(): Collection
@@ -203,6 +180,50 @@ class Project
         return $this;
     }
 
+    /**
+     * @return Collection|Contribution[]
+     */
+    public function getContributions(): Collection
+    {
+        return $this->contributions;
+    }
+
+    public function getAmountContributions(): float
+    {
+        $totalAmout = array_reduce($this->getContributions()->toArray(), function ($total, $contribution) {
+            return $total + $contribution->getAmout();
+        });
+        return is_null($totalAmout) ? 0 : $totalAmout;
+    }
+
+    public function getAmountContributionsPercentage(): float
+    {
+        return ($this->getAmountContributions() * 100) / $this->getGoal();
+    }
+
+    public function addContribution(Contribution $contribution): self
+    {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+            $contribution->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContribution(Contribution $contribution): self
+    {
+        if ($this->contributions->contains($contribution)) {
+            $this->contributions->removeElement($contribution);
+            // set the owning side to null (unless already changed)
+            if ($contribution->getProject() === $this) {
+                $contribution->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -214,11 +235,10 @@ class Project
 
         return $this;
     }
-    // Pour enrigistrer la date et l'heure quand les utilisateurs clique sir envoyer dans le formulaire
+
     /**
      * @ORM\PrePersist
      */
-
     public function prePersist()
     {
         $this->setCreatedAt(new \DateTime());

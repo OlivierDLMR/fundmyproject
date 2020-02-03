@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContributionRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Contribution
 {
@@ -24,12 +25,17 @@ class Contribution
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Project", inversedBy="contributions")
      */
-    private $projet;
+    private $project;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="contributions")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     public function getId(): ?int
     {
@@ -48,14 +54,14 @@ class Contribution
         return $this;
     }
 
-    public function getProjet(): ?Project
+    public function getProject(): ?Project
     {
-        return $this->projet;
+        return $this->project;
     }
 
-    public function setProjet(?Project $projet): self
+    public function setProject(?Project $project): self
     {
-        $this->projet = $projet;
+        $this->project = $project;
 
         return $this;
     }
@@ -75,6 +81,26 @@ class Contribution
     public function __toString()
     {
         return $this->getAmout();
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->setCreatedAt(new \DateTime());
     }
 
 

@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Contribution;
 use App\Entity\Project;
+use App\Form\ContributionType;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class ProjectController extends AbstractController
     public function index(ProjectRepository $projectRepository): Response
     {
         return $this->render('project/index.html.twig', [
-            'projects' => $projectRepository->findAll(),
+            'projects' => $projectRepository->findBy([], ['createdAt' => 'DESC']),
         ]);
     }
 
@@ -40,7 +41,7 @@ class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('project_index');
         }
 
         return $this->render('project/new.html.twig', [
@@ -50,12 +51,25 @@ class ProjectController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="project_show", methods={"GET"})
+     * @Route("/{id}", name="project_show", methods={"GET", "POST"})
      */
-    public function show(Project $project): Response
+    public function show(Project $project, Request $request): Response
     {
+        $contribution = new Contribution();
+        $contribution->setProject($project);
+        $contribution->setUser($this->getUser());
+        $form = $this->createForm(ContributionType::class, $contribution);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($contribution);
+            $entityManager->flush();
+        }
+
         return $this->render('project/show.html.twig', [
             'project' => $project,
+            'form' => $form->createView(),
         ]);
     }
 
